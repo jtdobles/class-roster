@@ -2,8 +2,9 @@ import { useMemo, useState } from 'react';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist/legacy/build/pdf';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min.js?url';
 
-GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.12.313/pdf.worker.min.js';
+GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const GROUP_LIMIT = 6;
 
@@ -205,7 +206,7 @@ export default function App() {
   const [students, setStudents] = useState([]);
   const [fields, setFields] = useState([]);
   const [criteria, setCriteria] = useState([]);
-  const [groupCount, setGroupCount] = useState(2);
+  const [groupCount, setGroupCount] = useState(3);
   const [groups, setGroups] = useState([]);
   const [error, setError] = useState('');
   const [manualHeaders, setManualHeaders] = useState('Name,Math Score,Reading Score');
@@ -493,6 +494,9 @@ export default function App() {
 
           {criteria.map((criterion, index) => (
             <div key={index} className="criterion-card">
+              <div className="criterion-header">
+                <strong>Criterion {index + 1}:</strong> {criterion.field} • {criterion.direction === 'desc' ? '↑ High' : '↓ Low'} • Weight: {criterion.weight}
+              </div>
               <div className="form-grid">
                 <label>
                   Field
@@ -565,8 +569,8 @@ export default function App() {
           <div className="groups-header">
             <h2>Suggested Classes</h2>
             <div className="export-row">
-              <button onClick={handleExportCSV}>Export CSV</button>
-              <button onClick={handleExportExcel}>Export Excel</button>
+              <button className="primary-button" onClick={handleExportCSV}>Export CSV</button>
+              <button className="primary-button" onClick={handleExportExcel}>Export Excel</button>
             </div>
           </div>
           <div className="groups-grid">

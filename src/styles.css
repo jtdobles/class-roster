@@ -105,6 +105,7 @@ input[type='number'] {
   border: 1px solid #cbd5e1;
   border-radius: 0.8rem;
   background: #ffffff;
+  color: #111827;
 }
 
 button {
@@ -174,6 +175,14 @@ button:not(.link-button):hover {
   border: 1px solid #e2e8f0;
   border-radius: 0.95rem;
   background: #f8fafc;
+}
+
+.criterion-header {
+  font-size: 0.95rem;
+  color: #4f46e5;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e2e8f0;
 }
 
 .small-input {
