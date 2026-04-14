@@ -106,6 +106,14 @@ input[type='number'] {
   border-radius: 0.8rem;
   background: #ffffff;
   color: #111827;
+  font-size: 1rem;
+  appearance: none;
+}
+
+select option {
+  color: #111827;
+  background: #ffffff;
+  padding: 0.5rem;
 }
 
 button {
