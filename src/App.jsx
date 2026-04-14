@@ -2,9 +2,8 @@ import { useMemo, useState } from 'react';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist/legacy/build/pdf';
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min.js?url';
 
-GlobalWorkerOptions.workerSrc = pdfjsWorker;
+GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.js';
 
 const GROUP_LIMIT = 6;
 
