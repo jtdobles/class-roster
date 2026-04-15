@@ -488,17 +488,28 @@ export default function App() {
         <section className="card">
           <h2>Grouping Rules</h2>
           <div className="hint">
-            Add criteria, select ascending or descending order for each, and assign weights.
+            Add grouping criteria below. You can either use the form controls or describe what you want in natural language.
+          </div>
+
+          <div className="card" style={{ marginBottom: '1rem', background: '#f8fafc' }}>
+            <h3>Quick Description (Optional)</h3>
+            <p>Describe how you want to group students, e.g., "separate by math scores but keep reading scores evenly spread"</p>
+            <textarea
+              placeholder="e.g., separate students by math scores but keep reading scores balanced across classes"
+              rows="2"
+              style={{ width: '100%', padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #cbd5e1' }}
+            />
+            <p className="hint" style={{ marginTop: '0.5rem' }}>This is for reference only - use the criteria below to set up your grouping rules.</p>
           </div>
 
           {criteria.map((criterion, index) => (
             <div key={index} className="criterion-card">
               <div className="criterion-header">
-                <strong>Criterion {index + 1}:</strong> {criterion.field} • {criterion.direction === 'desc' ? '↑ High' : '↓ Low'} • Weight: {criterion.weight}
+                <strong>Criterion {index + 1}:</strong> {criterion.field} • {criterion.direction === 'desc' ? 'Separate by high values' : 'Separate by low values'} • Priority: {criterion.weight}
               </div>
               <div className="form-grid">
                 <label>
-                  Field
+                  What to separate by
                   <select
                     value={criterion.field}
                     onChange={(event) => handleCriteriaChange(index, 'field', event.target.value)}
@@ -512,18 +523,18 @@ export default function App() {
                 </label>
 
                 <label>
-                  Direction
+                  How to group
                   <select
                     value={criterion.direction}
                     onChange={(event) => handleCriteriaChange(index, 'direction', event.target.value)}
                   >
-                    <option value="desc">High values first</option>
-                    <option value="asc">Low values first</option>
+                    <option value="desc">Put high values together</option>
+                    <option value="asc">Put low values together</option>
                   </select>
                 </label>
 
                 <label>
-                  Weight
+                  Priority (how important this is)
                   <input
                     className="small-input"
                     type="number"
@@ -533,6 +544,9 @@ export default function App() {
                     onChange={(event) => handleCriteriaChange(index, 'weight', event.target.value)}
                   />
                 </label>
+              </div>
+              <div className="hint" style={{ marginTop: '0.5rem' }}>
+                Higher priority means this factor has more influence on which class a student gets placed in.
               </div>
               <button className="link-button" type="button" onClick={() => handleRemoveCriterion(index)}>
                 Remove criterion
@@ -572,6 +586,20 @@ export default function App() {
               <button className="primary-button" onClick={handleExportExcel}>Export Excel</button>
             </div>
           </div>
+
+          <div className="card" style={{ marginBottom: '1.5rem', background: '#f0f9ff' }}>
+            <h3>How Classes Were Formed</h3>
+            <p>Students were grouped using the following criteria:</p>
+            <ul>
+              {criteria.map((criterion, index) => (
+                <li key={index}>
+                  <strong>{criterion.field}</strong> - {criterion.direction === 'desc' ? 'High values first' : 'Low values first'} (weight: {criterion.weight})
+                </li>
+              ))}
+            </ul>
+            <p>The algorithm calculated a composite score for each student based on these weighted criteria, then distributed students evenly across {groupCount} classes to balance the groups as much as possible.</p>
+          </div>
+
           <div className="groups-grid">
             {groups.map((group) => (
               <div key={group.name} className="group-card">
