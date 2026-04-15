@@ -180,7 +180,7 @@ function buildGroups(students, criteria, groupCount) {
 }
 
 function downloadCSV(rows, fields, filename = 'grouped-roster.csv') {
-  const csvRows = [fields.join(','), ...rows.map((row) => fields.map((field) => `"${String(row[field] ?? '').replace(/"/g, '""')}"`).join(','))];
+  const csvRows = [fields.join(','), ...rows.map((row) => fields.map((field) => `"${String(row[field] ?? '').replace(/"/g, '""')}`).join(','))];
   const csv = csvRows.join('\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
@@ -201,7 +201,6 @@ function downloadExcel(rows, fields, filename = 'grouped-roster.xlsx') {
 }
 
 export default function App() {
-  const [mode, setMode] = useState('upload');
   const [students, setStudents] = useState([]);
   const [fields, setFields] = useState([]);
   const [criteria, setCriteria] = useState([]);
@@ -377,71 +376,49 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <header>
-        <h1>Class Roster Generator MVP</h1>
-        <p>Import roster data from CSV, Excel, or PDF; add students manually; then group and export.</p>
-      </header>
-
+      
       <section className="card">
         <h2>Roster Source</h2>
-        <div className="form-grid">
-          <button
-            type="button"
-            className={mode === 'upload' ? 'primary-button' : ''}
-            onClick={() => setMode('upload')}
-          >
-            Upload file
-          </button>
-          <button
-            type="button"
-            className={mode === 'manual' ? 'primary-button' : ''}
-            onClick={() => setMode('manual')}
-          >
-            Manual entry
-          </button>
-        </div>
+        
+        <h3>Upload a file</h3>
+        <input type="file" accept=".csv,.xlsx,.xls,.pdf" onChange={handleFileChange} />
+        <p className="hint">Upload CSV, Excel, or text-based PDF tables. Headers are required.</p>
 
-        {mode === 'upload' ? (
-          <>
-            <input type="file" accept=".csv,.xlsx,.xls,.pdf" onChange={handleFileChange} />
-            <p className="hint">Upload CSV, Excel, or text-based PDF tables. Headers are required.</p>
-          </>
-        ) : (
-          <>
-            <label>
-              Manual headers
-              <input
-                type="text"
-                value={manualHeaders}
-                onChange={(event) => setManualHeaders(event.target.value)}
-                placeholder="Name,Math Score,Reading Score"
-              />
-            </label>
-            <button className="primary-button" type="button" onClick={handleManualHeaderSubmit}>
-              Start manual roster
+        <div style={{margin: '2rem 0', textAlign: 'center', color: '#6b7280'}}>or</div>
+
+        <h3>Manual entry</h3>
+        <label>
+          Manual headers
+          <input
+            type="text"
+            value={manualHeaders}
+            onChange={(event) => setManualHeaders(event.target.value)}
+            placeholder="Name,Math Score,Reading Score"
+          />
+        </label>
+        <button className="primary-button" type="button" onClick={handleManualHeaderSubmit}>
+          Start manual roster
+        </button>
+
+        {fields.length > 0 && (
+          <div className="card" style={{ marginTop: '1rem' }}>
+            <h3>New student row</h3>
+            <div className="form-grid">
+              {fields.map((field) => (
+                <label key={field}>
+                  {field}
+                  <input
+                    type="text"
+                    value={manualRow[field] ?? ''}
+                    onChange={(event) => handleManualRowChange(field, event.target.value)}
+                  />
+                </label>
+              ))}
+            </div>
+            <button className="primary-button" type="button" onClick={handleAddManualRow}>
+              Add student row
             </button>
-
-            {fields.length > 0 && (
-              <div className="card" style={{ marginTop: '1rem' }}>
-                <h3>New student row</h3>
-                <div className="form-grid">
-                  {fields.map((field) => (
-                    <label key={field}>
-                      {field}
-                      <input
-                        type="text"
-                        value={manualRow[field] ?? ''}
-                        onChange={(event) => handleManualRowChange(field, event.target.value)}
-                      />
-                    </label>
-                  ))}
-                </div>
-                <button className="primary-button" type="button" onClick={handleAddManualRow}>
-                  Add student row
-                </button>
-              </div>
-            )}
-          </>
+          </div>
         )}
       </section>
 
